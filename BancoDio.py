@@ -63,5 +63,5 @@ while True:
         input('\nPressione enter para continuar')
         os.system("clear")
     else: 
-        print("Insira um valor válido")
+        print("Insira um valor que seja válido")
         os.system("clear")
