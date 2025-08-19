@@ -26,6 +26,13 @@ def depositar():
     else:
         return valor
 
+def visualizarHistorico():
+    print('========ESTRATO========')
+    for operacao in estrato:
+        print("{}".format(operacao))
+    print(f"\nSaldo atual: R${saldo:.2f}")
+    print("=======================")
+
 cabecalho = """
 |=======Bem-vindo ao Banco=======|
 
@@ -56,11 +63,7 @@ while True:
         break
     elif acao == 'e':
         os.system("clear")
-        print('========ESTRATO========')
-        for operacao in estrato:
-            print("{}".format(operacao))
-        print(f"\nSaldo atual: R${saldo:.2f}")
-        print("=======================")
+        visualizarHistorico()
         input('\nPressione enter para continuar')
         os.system("clear")
     else: 
