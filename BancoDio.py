@@ -1,10 +1,15 @@
+"""
+Limite de 10 transações diarias
+Mostrar no extrato data e hora das transações
+"""
+import datetime
 import os
 
-saldo = 0.0
-saque = 0
-LIMITE_SAQUE = 3
-cont = 0
+saldo = 0.0,saque = 0, LIMITE_SAQUE = 3, cont = 0,transacao = 0, LIMITE_TRANSACAO = 10
 estrato = []
+def data():
+    momento = datetime.datetime.strftime(datetime.datetime.now(), "%d/%m/%Y  %H:%M:%s")
+    return momento
 
 def sacar(saldo_atual):
     retirar = float(input("Digite o valor para o saque: "))
@@ -30,17 +35,21 @@ cabecalho = """
 
 
 (d)deposito (s)saque (e)extrato (q)sair: """
-
 while True:
     acao = input(cabecalho)
     
     if acao == 'd':
         os.system("clear")
-        deposito = depositar()
-        if deposito > 0:
-            saldo += deposito
-            estrato.append(f"Valor depositado de R${deposito:.2f}")
-        os.system("clear")
+        if transacao >= LIMITE_TRANSACAO:
+            print("Maximo de 10 transações diarias atingidas")
+        else:
+            deposito = depositar()
+            if deposito > 0:
+                transacao = transacao + 1
+                saldo += deposito
+                hora = data()
+                estrato.append(f"Valor depositado de   R${deposito:.2f}   {hora}")      
+                os.system("clear")
     elif acao == 's':
         os.system("clear")
         if cont >= LIMITE_SAQUE:
@@ -49,7 +58,8 @@ while True:
             saque = sacar(saldo)
             if saque > 0:  # Só subtrai se o saque foi autorizado
                 saldo -= saque
-                estrato.append(f"Valor sacado da conta R${saque:.2f}")
+                hora = data()
+                estrato.append(f"Valor sacado da conta R${saque:.2f}    {hora}")
                 cont += 1
     elif acao == 'q':
         break
