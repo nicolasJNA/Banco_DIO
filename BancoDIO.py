@@ -1,71 +1,77 @@
-import os
+"""
+    APRIMORAMENTO DO BANCO 
+    funções a serem criadas
+        Saque; Deposito; Estrato, Criar_usuario; Criar_conta;
+"""
+import datetime
 
-saldo = 0.0
-saque = 0
-LIMITE_SAQUE = 3
-cont = 0
-estrato = []
-
-
-def sacar(saldo_atual):
-    retirar = float(input("Digite o valor para o saque: "))
-    if retirar > 500:
-        print("Valor ultrapassa o limite permitido (R$500.00)")
-        return 0
-    elif retirar > saldo_atual:
-        print(f"Valor do saque superior ao saldo\nSaldo atual: R${saldo_atual:.2f}")
-        return 0
-    else:
-        return retirar
-
-def depositar():
-    valor = float(input("Digite o valor para o deposito: "))
+def data():
+    momento = datetime.datetime.strftime(datetime.datetime.now(), "%d/%m/%Y  %H:%M:%S")
+    return momento
+def deposito(saldo,valor,extrato):
+    hora = data()
     if valor < 0:
-        print("Digite um valor válido")
-        return 0
+        print("informe um valor válido")
+        return saldo,extrato
     else:
-        return valor
-
-def visualizarHistorico():
-    print('========ESTRATO========')
-    for operacao in estrato:
-        print("{}".format(operacao))
-    print(f"\nSaldo atual: R${saldo:.2f}")
-    print("=======================")
-
-cabecalho = """
+        saldo += valor
+        extrato.append(f"Deposito R${valor}          {hora}")
+        return saldo,extrato
+def imprimir():
+    cabecalho = """\n
 |=======Bem-vindo ao Banco=======|
 
 
-(d)deposito (s)saque (e)extrato (q)sair: """
+(d)deposito
+(s)saque 
+(e)extrato 
+"""
+    escolha = input(cabecalho)
+    return escolha
+def cal_estrato(saldo,*,estrato):
+    print('======HISTORICO DE OPERACOES======')
+    for contagem in range(len(estrato)):
+        print(estrato[contagem])
+    
+    print("\nSaldo da conta: {}".format(saldo))
+    print("==================================")
+def saque(*,saldo,valor,estrato,limite,num_saques,limite_saques):
+    hora = data()
+    if(valor > saldo):
+        print("O valor do saque ultrapassa o valor do saldo da conta\nSaldo da conta: R${}".format(saldo))
+        return saldo,estrato
+    elif(valor > limite):
+        print("O valor máximo de 500")
+        return saldo,estrato
+    elif (num_saques > limite_saques):
+        print("Limite de saques atingido, faça outra operação")
+        return saldo,estrato
+    else:
+        estrato.append("Valor do saque R${}        {}".format(valor,hora))
+        num_saques += 1
+        return saldo-valor,estrato,num_saques
+
+
+saldo = 0
+estrato = []
+limite = 500
+numero_saques = 0
+LIMITE_DEPOSITOS = 10
+LIMITE_SAQUE = 3
+usuarios = []
+contas = []
 
 while True:
-    acao = input(cabecalho)
-    
-    if acao == 'd':
-        os.system("clear")
-        deposito = depositar()
-        if deposito > 0:
-            saldo += deposito
-            estrato.append(f"Valor depositado de R${deposito:.2f}")
-        os.system("clear")
-    elif acao == 's':
-        os.system("clear")
-        if cont >= LIMITE_SAQUE:
-            print("Limite máximo de saques atingido, faça outra operação")
-        else:
-            saque = sacar(saldo)
-            if saque > 0:  # Só subtrai se o saque foi autorizado
-                saldo -= saque
-                estrato.append(f"Valor sacado da conta R${saque:.2f}")
-                cont += 1
-    elif acao == 'q':
+    opcao = imprimir()
+    if opcao == 'd':
+        valor = float(input('Informe o valor do deposito: '))
+        saldo,estrato = deposito(saldo,valor,estrato)
+    elif opcao == 'e':
+        cal_estrato(saldo,estrato=estrato)
+    elif opcao == 's':
+        valor = float(input('Informe o valor do saque: '))
+        
+        saldo,estrato,numero_saques = saque(saldo=saldo,valor=valor,estrato=estrato,limite=limite,num_saques=numero_saques,limite_saques=LIMITE_SAQUE)
+        print(numero_saques)
+    elif opcao == 'q':
         break
-    elif acao == 'e':
-        os.system("clear")
-        visualizarHistorico()
-        input('\nPressione enter para continuar')
-        os.system("clear")
-    else: 
-        print("Insira um valor que seja válido")
-        os.system("clear")

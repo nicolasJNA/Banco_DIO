@@ -5,10 +5,9 @@ Mostrar no extrato data e hora das transações
 import datetime
 import os
 
-saldo = 0.0,saque = 0, LIMITE_SAQUE = 3, cont = 0,transacao = 0, LIMITE_TRANSACAO = 10
-estrato = []
+
 def data():
-    momento = datetime.datetime.strftime(datetime.datetime.now(), "%d/%m/%Y  %H:%M:%s")
+    momento = datetime.datetime.strftime(datetime.datetime.now(), "%d/%m/%Y  %H:%M:%S")
     return momento
 
 def sacar(saldo_atual):
@@ -29,6 +28,14 @@ def depositar():
         return 0
     else:
         return valor
+
+saldo = 0
+saque = 0
+LIMITE_SAQUE = 3
+cont = 0
+transacao = 0
+LIMITE_TRANSACAO = 10
+estrato = []
 
 cabecalho = """
 |=======Bem-vindo ao Banco=======|
